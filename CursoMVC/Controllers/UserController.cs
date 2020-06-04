@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using CursoMVC.Models;
 using CursoMVC.Models.TableViewModels;
+using CursoMVC.Models.ViewModels;
 
 namespace CursoMVC.Controllers
 {
@@ -27,6 +29,36 @@ namespace CursoMVC.Controllers
                        }).ToList();
             }
             return View(lst);
+        }
+        [HttpGet]
+        public ActionResult Add()
+        {
+
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Add(UserViewModel model)
+        {
+            //Validar
+            if (!ModelState.IsValid) //Si hay un error en los datos que se envian al UserViewModel.cs
+            {
+                return View(model); //Regresa los datos ingresados (No se borran los campos que se han llenado)
+            }
+            using (var db= new corsomvcEntities())
+            {
+                user oUser = new user();
+                //Pasamos los parametros a guardar
+                oUser.idState = 1;
+                oUser.email = model.Email;
+                oUser.edad = model.Edad;
+                oUser.password = model.Password;
+
+                //Agregar a la BD
+                db.user.Add(oUser);
+                db.SaveChanges();
+            }
+            //Enviamos al usuario a la lista de usuarios
+            return Redirect(Url.Content("~/User"));
         }
     }
 }
