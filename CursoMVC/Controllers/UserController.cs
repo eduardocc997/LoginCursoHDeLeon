@@ -101,5 +101,22 @@ namespace CursoMVC.Controllers
 
             return Redirect(Url.Content("~/User"));
         }
+
+        [HttpPost]
+        public ActionResult Delete(int Id)
+        {
+
+            using (var db = new corsomvcEntities())
+            {
+                var oUser = db.user.Find(Id);
+                oUser.idState = 3; //El idState 3 Significa Eliminado en nuestra BD
+
+                db.Entry(oUser).State = System.Data.Entity.EntityState.Modified; //Con esto le decimos a la bd que va a ejecutar una edicion
+                db.SaveChanges(); //Guardamos los cambios
+
+            }
+
+            return Content("1");
+        }
     }
 }

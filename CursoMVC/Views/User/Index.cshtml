@@ -39,6 +39,16 @@
 
 <script>
     function jsDelete(id) {
+        if (confirm("¿Seguro que desea eliminar este usuario?")) {
+            url = "@Url.Content("~/User/Delete")" + "/" + id;
 
+            $.post(url, function (data) {
+                if (data == "1") {
+                    document.location.href = "@Url.Content("~/User/")"
+                } else {
+                    alert("Ocurrio un error")
+                }
+            })
+        }
     }
 </script>
